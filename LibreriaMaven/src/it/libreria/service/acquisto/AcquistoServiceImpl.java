@@ -73,14 +73,31 @@ public class AcquistoServiceImpl implements AcquistoService {
 
 	@Override
 	public void rimuovi(Acquisto acquistoInstance) throws Exception {
-		// TODO Auto-generated method stub
-		
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+			entityManager.getTransaction().begin();
+			acquistoDAO.setEntityManager(entityManager);
+			acquistoDAO.delete(acquistoInstance);
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	@Override
 	public List<Acquisto> findAllAcquistiByGenere(Genere genereInput) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+			acquistoDAO.setEntityManager(entityManager);
+			return acquistoDAO.findAllAcquistiByGenere(genereInput);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			entityManager.close();
+		}
 	}
 
 	@Override
